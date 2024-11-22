@@ -77,7 +77,7 @@ const UpdateSingleCar = async (req: Request, res: Response) => {
     const { carId } = req.params;
     const Cardata = req.body;
     const result = await CarServices.getUpdateCarFromDB(carId, Cardata);
-  
+
     if (result !== null) {
       res.status(200).json({
         success: true,
@@ -101,9 +101,30 @@ const UpdateSingleCar = async (req: Request, res: Response) => {
   }
 };
 
+const getDeleteCar = async (req: Request, res: Response) => {
+  try {
+    const { carId } = req.params; 
+    const result = await CarServices.deleteCarFromDB(carId);
+    res.status(200).json({
+      success: true,
+      message: 'CarData is deleted successfully',
+      data: result,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
+  }
+};
+
 export const CarControllers = {
   createCar,
   getAllCar,
   getSingleCar,
   UpdateSingleCar,
+  getDeleteCar,
 };

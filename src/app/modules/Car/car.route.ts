@@ -12,4 +12,6 @@ router.get('/:carId',CarControllers.getSingleCar)
 
 router.put('/:carId',CarControllers.UpdateSingleCar)
 
+router.delete('/:carId',CarControllers.getDeleteCar)
+
 export const CarRoutes = router

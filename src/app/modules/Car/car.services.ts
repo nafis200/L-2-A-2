@@ -33,12 +33,19 @@ const getUpdateCarFromDB = async(carId: string, Cardata: object)=>{
   
 }
 
+const deleteCarFromDB = async(carId:string)=>{
+   const result = await CarModels.updateOne({_id: new ObjectId(carId)}, {
+    isDeleted: true
+   })
+   return result
+}
+
 
 
 export const CarServices = {
     createCarIntoDB,
     getAllCarFromDB,
     getSingleCarFromDB,
-    getUpdateCarFromDB
-  
+    getUpdateCarFromDB,
+    deleteCarFromDB
 }
