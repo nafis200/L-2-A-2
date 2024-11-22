@@ -9,5 +9,5 @@ export type CarModel = {
     description: string,
     quantity: number,
     inStock: boolean,
-    isDeleted: boolean
+    isDeleted: boolean,
 }

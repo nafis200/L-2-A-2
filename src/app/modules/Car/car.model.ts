@@ -51,6 +51,8 @@ const CarModelSchema = new Schema<CarModel>({
         type:Boolean,
         default:false
     }
+},{
+    timestamps: true
 })
 
 export const CarModels = model<CarModel>('CarModel',CarModelSchema)
