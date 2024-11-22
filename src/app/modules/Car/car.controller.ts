@@ -17,7 +17,7 @@ const createCar = async (req: Request, res: Response) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     res.status(500).json({
       success: false,
       message: error.error || 'something went wrong',
@@ -56,9 +56,9 @@ const getSingleCar = async (req: Request, res: Response) => {
         data: result,
       });
     } else {
-      res.status(500).json({
+      res.status(404).json({
         success: false,
-        message: 'Please give me valid id',
+        message: 'Not found Please give me valid id',
         data: result,
       });
     }
@@ -85,9 +85,9 @@ const UpdateSingleCar = async (req: Request, res: Response) => {
         data: result,
       });
     } else {
-      res.status(500).json({
+      res.status(404).json({
         success: false,
-        message: 'Id dont found',
+        message: 'Id nnt found',
         data: result,
       });
     }

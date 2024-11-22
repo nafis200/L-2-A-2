@@ -22,7 +22,10 @@ const orderModelSchema = new Schema<OrderModel>(
             required:true,
             min: 0
         }
-    }
+    },
+    {
+        timestamps: true,
+    },
 )
 
 export const OrderModels = model<OrderModel>('CarOrderModel', orderModelSchema);
