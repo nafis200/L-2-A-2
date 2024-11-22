@@ -14,6 +14,7 @@ const createCar = async (req: Request, res: Response) => {
       message: 'Car created successfully',
       data: result,
     });
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,7 +28,6 @@ const createCar = async (req: Request, res: Response) => {
 
 const getAllCar = async (req: Request, res: Response) => {
   try {
-    
     const result = await CarServices.getAllCarFromDB();
     res.status(200).json({
       success: true,
@@ -45,7 +45,35 @@ const getAllCar = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleCar = async (req: Request, res: Response) => {
+  try {
+    const { carId } = req.params;
+    const result = await CarServices.getSingleCarFromDB(carId);
+    if (result.length !== 0) {
+      res.status(200).json({
+        success: true,
+        message: 'Car retrieved successfully',
+        data: result,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Please give me valid id',
+        data: result,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
+  }
+};
+
 export const CarControllers = {
   createCar,
-  getAllCar
+  getAllCar,
+  getSingleCar,
 };
