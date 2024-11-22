@@ -72,8 +72,38 @@ const getSingleCar = async (req: Request, res: Response) => {
   }
 };
 
+const UpdateSingleCar = async (req: Request, res: Response) => {
+  try {
+    const { carId } = req.params;
+    const Cardata = req.body;
+    const result = await CarServices.getUpdateCarFromDB(carId, Cardata);
+  
+    if (result !== null) {
+      res.status(200).json({
+        success: true,
+        message: 'Car updated successfully',
+        data: result,
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: 'Id dont found',
+        data: result,
+      });
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
+  }
+};
+
 export const CarControllers = {
   createCar,
   getAllCar,
   getSingleCar,
+  UpdateSingleCar,
 };

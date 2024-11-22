@@ -23,8 +23,22 @@ const getSingleCarFromDB = async(carId:string)=>{
     return result
 }
 
+const getUpdateCarFromDB = async(carId: string, Cardata: object)=>{
+   const result = await CarModels.findByIdAndUpdate(
+         carId,
+         Cardata,
+         {new : true, runValidators: true}
+   )
+   return result
+  
+}
+
+
+
 export const CarServices = {
     createCarIntoDB,
     getAllCarFromDB,
-    getSingleCarFromDB
+    getSingleCarFromDB,
+    getUpdateCarFromDB
+  
 }
