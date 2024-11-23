@@ -1,13 +1,23 @@
-import type { OrderModel } from "./order.interface";
-import { OrderModels } from "./order.model";
+import type { OrderModel } from './order.interface';
+import { OrderModels } from './order.model';
 
+const createOrderIntoDB = async (Orderdata: OrderModel) => {
+  const result = await OrderModels.create(Orderdata);
+  return result;
+};
+const getAllRevenue = async () => {
+  const result = await OrderModels.aggregate([
+    {
+      $group: {
+        _id: null,
+        totalRevenue: { $sum: '$quantity' },
+      },
+    },
+  ]);
+  return result;
+};
 
-const createOrderIntoDB = async (Orderdata:OrderModel) => {
-    const result = await OrderModels.create(Orderdata);
-    return result;
-  };
-
-
-  export const OrderServices = {
-     createOrderIntoDB
-  }
+export const OrderServices = {
+  createOrderIntoDB,
+  getAllRevenue,
+};

@@ -57,6 +57,28 @@ const OrderCar:RequestHandler = async (req: Request, res: Response) => {
   }
 };
 
+const RevenueOrder:RequestHandler = async(req:Request,res:Response)=>{
+  try {
+    const result = await OrderServices.getAllRevenue();
+    res.status(200).json({
+      success: true,
+      message: 'Revenue calculated successfully',
+      data: {
+        "totlaRevenue": result[0].totalRevenue
+      },
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'something went wrong',
+      error: error,
+    });
+  }
+}
+
 export const OrderController = {
   OrderCar,
+  RevenueOrder
 };
