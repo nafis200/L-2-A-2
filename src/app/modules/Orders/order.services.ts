@@ -10,7 +10,7 @@ const getAllRevenue = async () => {
     {
       $group: {
         _id: null,
-        totalRevenue: { $sum: '$quantity' },
+        totalRevenue: { $sum: '$totalPrice' },
       },
     },
   ]);
