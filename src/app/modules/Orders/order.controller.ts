@@ -1,23 +1,26 @@
 import type { Request, Response } from 'express';
+import { z } from 'zod';
 import { OrderValidationSchema } from './order.validation';
 import { OrderServices } from './order.services';
 import { CarServices } from '../Car/car.services';
-import type { RequestHandler } from 'express';
 
-const OrderCar:RequestHandler = async (req: Request, res: Response) => {
+type OrderDataType = z.infer<typeof OrderValidationSchema>;
+
+export const OrderCar = async (req: Request, res: Response): Promise<void> => {
   try {
-    const Orderdata = req.body;
+    const Orderdata: OrderDataType = req.body;
     const ZodparseCardata = OrderValidationSchema.parse(Orderdata);
 
-    const { quantity: orderQuantity, car } = Orderdata;
+    const { quantity: orderQuantity, car } = ZodparseCardata;
 
     const carDataArray = await CarServices.getSingleCarFromDB(car);
 
     if (!carDataArray || carDataArray.length === 0) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
-        message: "No data found for this car ID",
+        message: 'No data found for this car ID',
       });
+      return;
     }
 
     const carData = carDataArray[0];
@@ -25,10 +28,11 @@ const OrderCar:RequestHandler = async (req: Request, res: Response) => {
     const { quantity, inStock } = carData;
 
     if (!inStock || quantity < orderQuantity) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
-        message: "Insufficient stock",
+        message: 'Insufficient stock',
       });
+      return;
     }
 
     carData.quantity -= orderQuantity;
@@ -37,48 +41,55 @@ const OrderCar:RequestHandler = async (req: Request, res: Response) => {
       carData.inStock = false;
     }
 
-    const result2 = await CarServices.getUpdateCarFromDB(car,carData)
+    const updatedCarData = await CarServices.getUpdateCarFromDB(car, carData);
+    const createdOrder = await OrderServices.createOrderIntoDB(ZodparseCardata);
 
-    const result = await OrderServices.createOrderIntoDB(ZodparseCardata);
-
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      message: "Order created successfully",
-      data: result,
-      data1:result2
+      message: 'Order created successfully',
+      data: createdOrder,
+      updatedCarData,
     });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
-      message: error.message || "Something went wrong",
+      message: error.message || 'Something went wrong',
       error,
     });
   }
 };
 
-const RevenueOrder:RequestHandler = async(req:Request,res:Response)=>{
+export const RevenueOrder = async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await OrderServices.getAllRevenue();
+
+    if (!result || result.length === 0 || !result[0]?.totalRevenue) {
+      res.status(404).json({
+        success: false,
+        message: 'No revenue data found',
+      });
+      return;
+    }
+
     res.status(200).json({
       success: true,
       message: 'Revenue calculated successfully',
       data: {
-        "totlaRevenue": result[0].totalRevenue
+        totalRevenue: result[0].totalRevenue,
       },
     });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     res.status(500).json({
       success: false,
-      message: error.message || 'something went wrong',
-      error: error,
+      message: error.message || 'Something went wrong',
+      error,
     });
   }
-}
+};
 
-export const OrderController = {
+export const OrderControllers = {
   OrderCar,
-  RevenueOrder
+  RevenueOrder,
 };
