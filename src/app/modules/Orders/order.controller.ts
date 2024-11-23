@@ -6,7 +6,7 @@ import { CarServices } from '../Car/car.services';
 
 type OrderDataType = z.infer<typeof OrderValidationSchema>;
 
-export const OrderCar = async (req: Request, res: Response): Promise<void> => {
+export const OrderCar = async (req: Request, res: Response) => {
   try {
     const Orderdata: OrderDataType = req.body;
     const ZodparseCardata = OrderValidationSchema.parse(Orderdata);
