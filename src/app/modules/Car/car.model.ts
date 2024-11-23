@@ -25,7 +25,7 @@ const CarModelSchema = new Schema<CarModel>(
     category: {
       type: String,
       enum: {
-        values: ['Sedan', 'SUV', 'Truck', 'Coupe,', 'Convertible'],
+        values: ['Sedan', 'SUV', 'Truck', 'Coupe', 'Convertible'],
         message:
           "Category must be one of 'Sedan', 'SUV','Truck', 'Coupe,','Convertible'",
       },

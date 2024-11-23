@@ -17,7 +17,6 @@ const createCar = async (req: Request, res: Response) => {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
-     
     res.status(500).json({
       success: false,
       message: error.error || 'something went wrong',
@@ -28,7 +27,14 @@ const createCar = async (req: Request, res: Response) => {
 
 const getAllCar = async (req: Request, res: Response) => {
   try {
-    const result = await CarServices.getAllCarFromDB();
+    let searchItem;
+    if (typeof req.query.searchItem === 'string') {
+      searchItem = req.query.searchItem;
+    } else {
+      searchItem = undefined;
+    }
+
+    const result = await CarServices.getAllCarFromDB(searchItem);
     res.status(200).json({
       success: true,
       message: 'Car created successfully',
@@ -103,7 +109,7 @@ const UpdateSingleCar = async (req: Request, res: Response) => {
 
 const getDeleteCar = async (req: Request, res: Response) => {
   try {
-    const { carId } = req.params; 
+    const { carId } = req.params;
     const result = await CarServices.deleteCarFromDB(carId);
     res.status(200).json({
       success: true,

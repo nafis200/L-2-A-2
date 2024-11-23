@@ -7,8 +7,17 @@ const createCarIntoDB = async (Cardata: CarModel) => {
   return result;
 };
 
-const getAllCarFromDB = async()=>{
-     const result = await CarModels.find()
+const getAllCarFromDB = async(searchItem?:string)=>{
+    
+     const query = searchItem ? {
+      $or: [
+         { brand: { $regex: new RegExp(searchItem, "i") } },
+         { category: { $regex: new RegExp(searchItem, "i") } },
+         { model: { $regex: new RegExp(searchItem, "i") } },
+     ],
+     } : {}
+
+     const result = await CarModels.find(query)
      return result
 }
 
