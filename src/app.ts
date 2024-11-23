@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 
 // application route
-// it goes Car routes
+////it goes Car routes
 app.use('/api/cars', CarRoutes);
 app.use('/api/orders',OrderRoutes)
 
