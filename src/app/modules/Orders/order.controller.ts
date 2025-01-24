@@ -11,8 +11,10 @@ export const OrderCar = async (req: Request, res: Response) => {
     const Orderdata: OrderDataType = req.body;
     const ZodparseCardata = OrderValidationSchema.parse(Orderdata);
 
-    const { quantity: orderQuantity, car } = ZodparseCardata;
+    const { quantity: orderQuantity, car, totalPrice } = ZodparseCardata;
 
+    
+  
     const carDataArray = await CarServices.getSingleCarFromDB(car);
 
     if (!carDataArray || carDataArray.length === 0) {
@@ -36,6 +38,7 @@ export const OrderCar = async (req: Request, res: Response) => {
     }
 
     carData.quantity -= orderQuantity;
+    carData.price = (orderQuantity * totalPrice)
 
     if (carData.quantity === 0) {
       carData.inStock = false;
