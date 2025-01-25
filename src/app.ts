@@ -4,17 +4,15 @@ import { CarRoutes } from './app/modules/Car/car.route';
 import { OrderRoutes } from './app/modules/Orders/order.route';
 import globalErrorhandler from './app/middleware/globalErrorhandler';
 import Notfound from './app/middleware/notFound';
+import { UserRoutes } from './app/modules/user/user.route';
 const app: Application = express();
 
-// parser
-
 app.use(express.json());
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:5173'], credentials: true }));
 
-// application route
-////it goes Car routes
 app.use('/api/cars', CarRoutes);
 app.use('/api/orders',OrderRoutes)
+app.use('/api',UserRoutes)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
