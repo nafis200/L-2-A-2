@@ -30,10 +30,14 @@ const getSingleCarFromDB = async (carId: string) => {
 };
 
 const getUpdateCarFromDB = async (carId: string, Cardata: object) => {
-  const result = await CarModels.findByIdAndUpdate(carId, Cardata, {
-    new: true,
-    runValidators: true,
-  });
+  const result = await CarModels.findByIdAndUpdate(
+    carId,
+    { ...Cardata, inStock: true}, 
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
   return result;
 };
 

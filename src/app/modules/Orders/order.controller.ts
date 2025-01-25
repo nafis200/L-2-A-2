@@ -12,7 +12,8 @@ export const OrderCar = catchAsync(async (req, res) => {
   const Orderdata: OrderDataType = req.body;
   const ZodparseCardata = OrderValidationSchema.parse(Orderdata);
 
-  const { quantity: orderQuantity, car, totalPrice } = ZodparseCardata;
+  const { quantity: orderQuantity, car, totalPrice} = ZodparseCardata;
+
 
   const carDataArray = await CarServices.getSingleCarFromDB(car);
 
@@ -56,12 +57,14 @@ export const OrderCar = catchAsync(async (req, res) => {
   }
 
   const updatedCarData = await CarServices.getUpdateCarFromDB(car, carData);
-  const createdOrder = await OrderServices.createOrderIntoDB(ZodparseCardata);
+  const createdOrder = await OrderServices.createOrderIntoDB(req.body,req.ip!);
+
+  
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic semesters are retrieved successfully',
+    message: 'Order successfully done',
     data: [updatedCarData, createdOrder],
   });
 });
@@ -93,7 +96,19 @@ export const RevenueOrder = catchAsync(async (req, res) => {
   });
 });
 
+
+const verifyPayment = catchAsync(async (req, res) => {
+  const order = await OrderServices.verifyPayment(req.query.order_id as string);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success:true,
+    message: 'Order verified successfully',
+    data: order,
+  });
+});
+
 export const OrderControllers = {
   OrderCar,
   RevenueOrder,
+  verifyPayment
 };

@@ -6,4 +6,5 @@ export const OrderValidationSchema = z.object({
   car: z.string().min(1, { message: "Car field must not be empty" }),
   quantity: z.number().int().positive({ message: "Quantity must be a positive integer grater than zero" }),
   totalPrice: z.number().nonnegative({ message: "Total price must be a non-negative number" }),
+
 });
