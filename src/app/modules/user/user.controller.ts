@@ -41,7 +41,20 @@ const RegisterUser = catchAsync(async (req, res) => {
     });
   });
 
+  const refreshToken = catchAsync(async (req, res) => {
+    const { refreshToken } = req.cookies;
+    const result = await UserServices.refreshToken(refreshToken);
+  
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Access token is retrieved succesfully!',
+      data: result,
+    });
+  });
+
   export const UserController = {
     RegisterUser,
     loginUser,
+    refreshToken,
   };

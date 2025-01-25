@@ -4,6 +4,7 @@ import { User } from './user.model';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import httpStatus from "http-status";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const RegisterUser = async (payload: TUser) => {
   if (!payload) {
@@ -71,8 +72,39 @@ const loginUser = async (payload: TUser) => {
     refreshToken,
   };
 };
+const refreshToken = async (token: string) => {
+  // checking if the given token is valid
+  const decoded = jwt.verify(
+    token,
+    config.jwt_refresh_secret as string,
+  ) as JwtPayload;
+
+  const { email } = decoded;
+
+  // checking if the user is exist
+  const user = await User.isUserExistsByCustomId(email);
+
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+  
+  console.log(jwtPayload)
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  return {
+    accessToken,
+  };
+};
 
 export const UserServices = {
   RegisterUser,
   loginUser,
+  refreshToken,
 };

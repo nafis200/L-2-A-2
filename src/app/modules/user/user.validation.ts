@@ -14,3 +14,11 @@ export const UserValidationSchema = z.object({
       .min(6, { message: 'Password must be at least 6 characters long' }),
   }),
 });
+
+export const refreshTokenValidationSchema = z.object({
+  cookies: z.object({
+    refreshToken: z.string({
+      required_error: 'Refresh token is required!',
+    }),
+  }),
+});

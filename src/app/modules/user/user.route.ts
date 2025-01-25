@@ -2,7 +2,7 @@
 import express from 'express';
 import { UserController } from './user.controller';
 import ValidateRequest from '../../middleware/validateRequest';
-import { UserValidationSchema } from './user.validation';
+import { refreshTokenValidationSchema, UserValidationSchema } from './user.validation';
 
 
 
@@ -12,6 +12,11 @@ router.post('/register',ValidateRequest(UserValidationSchema),UserController.Reg
 
 router.post('/login',UserController.loginUser)
 
+router.post(
+    '/refresh-token',
+    ValidateRequest(refreshTokenValidationSchema),
+    UserController.refreshToken
+  );
 
 
 export const UserRoutes = router;

@@ -18,14 +18,9 @@ const createCar = catchAsync(async (req, res) => {
 });
 
 const getAllCar = catchAsync(async (req, res) => {
-  let searchItem;
-  if (typeof req.query.searchItem === 'string') {
-    searchItem = req.query.searchItem;
-  } else {
-    searchItem = undefined;
-  }
+ 
 
-  const result = await CarServices.getAllCarFromDB(searchItem);
+  const result = await CarServices.getAllCarFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
