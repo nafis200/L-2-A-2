@@ -91,10 +91,16 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
+const getOrders = async () => {
+  const data = await OrderModels.find();
+  return data;
+};
+
 export const OrderServices = {
   createOrderIntoDB,
   getAllRevenue,
   verifyPayment,
+  getOrders,
 };
 
 

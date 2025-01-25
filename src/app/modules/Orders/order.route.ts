@@ -12,6 +12,7 @@ router.post('/',OrderControllers.OrderCar);
 router.get('/verify',OrderControllers.verifyPayment)
 
 router.get('/revenue',OrderControllers.RevenueOrder)
+router.get('/Allorder',OrderControllers.getOrders)
 
 export const OrderRoutes = router
 
