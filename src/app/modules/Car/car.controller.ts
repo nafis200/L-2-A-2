@@ -1,131 +1,94 @@
-import type { Request, Response } from 'express';
 import { CarServices } from './car.services';
-import { CarModelValidationSchema } from './car.validation';
+import { CarModelUpdateValidationSchema, CarModelValidationSchema } from './car.validation';
+import catchAsync from '../../utils/catchAsync';
+import httpStatus from 'http-status';
+import sendResponse from '../../utils/sendResponse';
+const createCar = catchAsync(async (req, res) => {
+  const Cardata = req.body;
 
-const createCar = async (req: Request, res: Response) => {
-  try {
-    const Cardata = req.body;
+  const ZodparseCardata = CarModelValidationSchema.parse(Cardata);
 
-    const ZodparseCardata = CarModelValidationSchema.parse(Cardata);
+  const result = await CarServices.createCarIntoDB(ZodparseCardata);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Car created successfully',
+    data: result,
+  });
+});
 
-    const result = await CarServices.createCarIntoDB(ZodparseCardata);
-    res.status(200).json({
+const getAllCar = catchAsync(async (req, res) => {
+  let searchItem;
+  if (typeof req.query.searchItem === 'string') {
+    searchItem = req.query.searchItem;
+  } else {
+    searchItem = undefined;
+  }
+
+  const result = await CarServices.getAllCarFromDB(searchItem);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Car Get successfully',
+    data: result,
+  });
+});
+
+const getSingleCar = catchAsync(async (req, res) => {
+  const { carId } = req.params;
+  const result = await CarServices.getSingleCarFromDB(carId);
+  if (result.length !== 0) {
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'Car created successfully',
+      message: 'Car retrieved successfully',
       data: result,
     });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.error || 'something went wrong',
-      error: error,
-    });
-  }
-};
-
-const getAllCar = async (req: Request, res: Response) => {
-  try {
-    let searchItem;
-    if (typeof req.query.searchItem === 'string') {
-      searchItem = req.query.searchItem;
-    } else {
-      searchItem = undefined;
-    }
-
-    const result = await CarServices.getAllCarFromDB(searchItem);
-    res.status(200).json({
+  } else {
+    sendResponse(res, {
+      statusCode: httpStatus.NOT_FOUND,
       success: true,
-      message: 'Car created successfully',
+      message: 'Not found Please give me valid id',
       data: result,
     });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'something went wrong',
-      error: error,
-    });
   }
-};
+});
 
-const getSingleCar = async (req: Request, res: Response) => {
-  try {
-    const { carId } = req.params;
-    const result = await CarServices.getSingleCarFromDB(carId);
-    if (result.length !== 0) {
-      res.status(200).json({
-        success: true,
-        message: 'Car retrieved successfully',
-        data: result,
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'Not found Please give me valid id',
-        data: result,
-      });
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'something went wrong',
-      error: error,
-    });
-  }
-};
+const UpdateSingleCar = catchAsync(async (req, res) => {
+  const { carId } = req.params;
+  const Cardata = req.body;
+  const ZodparseCardata = CarModelUpdateValidationSchema.parse(Cardata);
+  const result = await CarServices.getUpdateCarFromDB(carId, ZodparseCardata);
 
-const UpdateSingleCar = async (req: Request, res: Response) => {
-  try {
-    const { carId } = req.params;
-    const Cardata = req.body;
-    const result = await CarServices.getUpdateCarFromDB(carId, Cardata);
-
-    if (result !== null) {
-      res.status(200).json({
-        success: true,
-        message: 'Car updated successfully',
-        data: result,
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'Id nnt found',
-        data: result,
-      });
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'something went wrong',
-      error: error,
-    });
-  }
-};
-
-const getDeleteCar = async (req: Request, res: Response) => {
-  try {
-    const { carId } = req.params;
-    const result = await CarServices.deleteCarFromDB(carId);
-    res.status(200).json({
+  if (result !== null) {
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      message: 'CarData is deleted successfully',
+      message: 'Car updated successfully',
       data: result,
     });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'something went wrong',
-      error: error,
+  } else {
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Id not found',
+      data: result,
     });
   }
-};
+});
+
+
+
+const getDeleteCar = catchAsync(async (req, res) => {
+  const { carId } = req.params;
+  const result = await CarServices.deleteCarFromDB(carId);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'CarData is deleted successfully',
+    data: result,
+  });
+});
 
 export const CarControllers = {
   createCar,

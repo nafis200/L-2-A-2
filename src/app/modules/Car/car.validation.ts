@@ -31,4 +31,15 @@ export const CarModelValidationSchema = z.object({
     isDeleted: z.boolean().default(false),
 });
 
+export const CarModelUpdateValidationSchema = z.object(
+    {
+        price: z
+        .number({ required_error: "Price is required" })
+        .min(0, "Price must be zero or greater"),
+        quantity: z
+        .number({ required_error: "Quantity is required" })
+        .min(0, "Quantity must be zero or greater"),
+    }
+)
+
 
