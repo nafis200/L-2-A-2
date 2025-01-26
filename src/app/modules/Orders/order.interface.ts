@@ -1,10 +1,9 @@
-import { Types } from "mongoose";
 
 
 
 export type OrderModel = {
     email:string,
-    car:Types.ObjectId,
+    car:string,
     quantity:number,
     totalPrice:number,
     status?: "Pending" | "Paid" | "Shipped" | "Completed" | "Cancelled";

@@ -8,6 +8,7 @@ export type CarModel = {
     category: 'Sedan' | 'SUV' | 'Truck' | 'Coupe' | 'Convertible',
     description: string,
     quantity: number,
+    image:string,
     inStock: boolean,
     isDeleted: boolean,
 }

@@ -9,8 +9,7 @@ const orderModelSchema = new Schema<OrderModel>(
             trim:true
         },
         car:{
-            type: Schema.Types.ObjectId,
-            ref: "CarModel",
+            type: String,
             required:[true,"CarId is required"],
         },
         quantity:{

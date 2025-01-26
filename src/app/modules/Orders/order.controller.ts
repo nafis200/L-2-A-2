@@ -12,8 +12,7 @@ export const OrderCar = catchAsync(async (req, res) => {
   const Orderdata: OrderDataType = req.body;
   const ZodparseCardata = OrderValidationSchema.parse(Orderdata);
 
-  const { quantity: orderQuantity, car, totalPrice} = ZodparseCardata;
-
+  const { quantity: orderQuantity, car, totalPrice } = ZodparseCardata;
 
   const carDataArray = await CarServices.getSingleCarFromDB(car);
 
@@ -57,9 +56,8 @@ export const OrderCar = catchAsync(async (req, res) => {
   }
 
   const updatedCarData = await CarServices.getUpdateCarFromDB(car, carData);
-  const createdOrder = await OrderServices.createOrderIntoDB(req.body,req.ip!);
-
-  
+  // const createdOrder = await OrderServices.createOrderIntoDB(req.body, req.ip!);
+  const createdOrder = await OrderServices.createOrderIntoDB(ZodparseCardata, req.ip!);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -96,12 +94,11 @@ export const RevenueOrder = catchAsync(async (req, res) => {
   });
 });
 
-
 const verifyPayment = catchAsync(async (req, res) => {
   const order = await OrderServices.verifyPayment(req.query.order_id as string);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
-    success:true,
+    success: true,
     message: 'Order verified successfully',
     data: order,
   });
@@ -112,9 +109,9 @@ const getOrders = catchAsync(async (req, res) => {
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
-    message: "Order retrieved successfully",
+    message: 'Order retrieved successfully',
     data: order,
-    success: true
+    success: true,
   });
 });
 
@@ -122,5 +119,5 @@ export const OrderControllers = {
   OrderCar,
   RevenueOrder,
   verifyPayment,
-  getOrders
+  getOrders,
 };

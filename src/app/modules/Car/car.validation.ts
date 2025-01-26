@@ -24,6 +24,8 @@ export const CarModelValidationSchema = z.object({
         .string()
         .trim()
         .default("No description provide"),
+    image: z
+        .string({ required_error: "Image is required" }),
     quantity: z
         .number({ required_error: "Quantity is required" })
         .min(0, "Quantity must be zero or greater"),

@@ -2,7 +2,7 @@ import type { OrderModel } from './order.interface';
 import { OrderModels } from './order.model';
 import { orderUtils } from './order.utils';
 
-const createOrderIntoDB = async (Orderdata: OrderModel, client_ip: string) => {
+const createOrderIntoDB = async (Orderdata: OrderModel, client_ip?: string) => {
   const result = await OrderModels.create(Orderdata);
 
   const shurjopayPayload = {

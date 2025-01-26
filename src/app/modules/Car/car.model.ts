@@ -46,6 +46,10 @@ const CarModelSchema = new Schema<CarModel>(
       required: true,
       default: true,
     },
+    image: {
+      type: String,
+      required: [true, 'Image must be required'],
+    },
     isDeleted: {
       type: Boolean,
       default: false,

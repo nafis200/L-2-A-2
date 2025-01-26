@@ -13,6 +13,8 @@ const RegisterUser = async (payload: TUser) => {
 
   const existingUser = await User.findOne({ email: payload.email });
 
+  payload.role = 'user'
+
   if (existingUser) {
     throw new AppError(404,'Email already exist');
   }
@@ -44,7 +46,15 @@ const RegisterUser = async (payload: TUser) => {
 
 
 const loginUser = async (payload: TUser) => {
+
+
+
   const user = await User.isUserExistsByCustomId(payload.email);  
+
+  
+  if(!user){
+    throw new AppError(httpStatus.NOT_FOUND,"email is not register")
+  }
 
   if (!(await User.isPasswordMatched(payload?.password, user?.password))) {
     throw new AppError(httpStatus.FORBIDDEN, "Password do not matched");
@@ -90,7 +100,7 @@ const refreshToken = async (token: string) => {
     role: user.role,
   };
   
-  console.log(jwtPayload)
+  // console.log(jwtPayload)
 
   const accessToken = createToken(
     jwtPayload,
