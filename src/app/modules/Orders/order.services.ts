@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder';
 import type { OrderModel } from './order.interface';
 import { OrderModels } from './order.model';
 import { orderUtils } from './order.utils';
@@ -91,10 +92,35 @@ const verifyPayment = async (order_id: string) => {
   return verifiedPayment;
 };
 
-const getOrders = async () => {
-  const data = await OrderModels.find();
-  return data;
+const getOrders = async (query: Record<string, unknown>) => {
+  const orderQuery = new QueryBuilder(OrderModels.find(),query)
+  .filter()
+  .sort()
+  .paginate()
+  .fields()
+
+  const result = await orderQuery.modelQuery;
+  const meta = await orderQuery.countTotal()
+
+  return {
+     result,
+     meta
+  }
 };
+
+// const carQuery = new QueryBuilder(CarModels.find(), query)
+//     .search(SearchField)
+//     .filter()
+//     .sort()
+//     .paginate()
+//     .fields();
+//   const result = await carQuery.modelQuery;
+//   const meta = await carQuery.countTotal();
+
+//   return {
+//      result,
+//      meta
+//   };
 
 export const OrderServices = {
   createOrderIntoDB,

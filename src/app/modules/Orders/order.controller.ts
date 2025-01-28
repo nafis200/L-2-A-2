@@ -105,12 +105,13 @@ const verifyPayment = catchAsync(async (req, res) => {
 });
 
 const getOrders = catchAsync(async (req, res) => {
-  const order = await OrderServices.getOrders();
+  const order = await OrderServices.getOrders(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
     message: 'Order retrieved successfully',
-    data: order,
+    meta: order.meta,
+    data: order.result,
     success: true,
   });
 });

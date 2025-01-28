@@ -8,7 +8,7 @@ class QueryBuilder<T> {
     this.modelQuery = modelQuery;
     this.query = query;
   }
-  //  search able field asche
+
   search(searchableFields: string[]) {
     const searchTerm = this?.query?.searchTerm;
     if (searchTerm) {
@@ -28,9 +28,12 @@ class QueryBuilder<T> {
   filter() {
     const queryObj = { ...this.query }; // copy
 
+    // Filtering
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
 
     excludeFields.forEach((el) => delete queryObj[el]);
+
+    
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>);
 
@@ -61,6 +64,20 @@ class QueryBuilder<T> {
 
     this.modelQuery = this.modelQuery.select(fields);
     return this;
+  }
+  async countTotal() {
+    const totalQueries = this.modelQuery.getFilter();
+    const total = await this.modelQuery.model.countDocuments(totalQueries);
+    const page = Number(this?.query?.page) || 1;
+    const limit = Number(this?.query?.limit) || 10;
+    const totalPage = Math.ceil(total / limit);
+
+    return {
+      page,
+      limit,
+      total,
+      totalPage,
+    };
   }
 }
 

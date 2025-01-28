@@ -8,6 +8,7 @@ import handleValidationError from "../errors/handleValidationError";
 import handleDuplicateError from "../errors/handleDuplicateError";
 import AppError from "../errors/AppError";
 import { TErrorSources } from '../interface/error';
+import handleCastError from './../errors/handleCastError';
 // Error request handler err: any, req: Request, res: Response, next: NextFunction provide these type
 
 const globalErrorhandler: ErrorRequestHandler = (err, req, res, _next) => {
@@ -70,7 +71,7 @@ export default globalErrorhandler
 // before module 4
 
 // import { NextFunction, Request, Response } from 'express';
-import handleCastError from './../errors/handleCastError';
+
 
 // const globalErrorHandler = (
 //   err: any,

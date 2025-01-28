@@ -10,14 +10,22 @@ const createCarIntoDB = async (Cardata: CarModel) => {
 };
 
 const getAllCarFromDB = async (query: Record<string, unknown>) => {
-  const carQuery = new QueryBuilder(CarModels.find(), query)
+  const academicSemesterQuery = new QueryBuilder(CarModels.find(), query)
     .search(SearchField)
     .filter()
     .sort()
     .paginate()
     .fields();
-  const result = await carQuery.modelQuery;
-  return result;
+
+  const result = await academicSemesterQuery.modelQuery;
+  const meta = await academicSemesterQuery.countTotal();
+
+ 
+
+  return {
+    meta,
+    result,
+  };
 };
 
 const getSingleCarFromDB = async (carId: string) => {
@@ -32,11 +40,11 @@ const getSingleCarFromDB = async (carId: string) => {
 const getUpdateCarFromDB = async (carId: string, Cardata: object) => {
   const result = await CarModels.findByIdAndUpdate(
     carId,
-    { ...Cardata, inStock: true}, 
+    { ...Cardata, inStock: true },
     {
       new: true,
       runValidators: true,
-    }
+    },
   );
   return result;
 };

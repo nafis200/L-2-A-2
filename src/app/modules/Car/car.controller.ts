@@ -24,8 +24,9 @@ const getAllCar = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Car Get successfully',
-    data: result,
+    message: 'Car are retrieved successfully',
+    meta: result.meta,
+    data: result.result,
   });
 });
 

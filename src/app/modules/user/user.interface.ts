@@ -7,6 +7,7 @@ export interface TUser {
   password: string;
   role: 'admin' | 'user';
   profileImg?: string;
+  status: 'in-progress' | 'blocked';
 }
 
 export interface UserModel extends Model<TUser> {
