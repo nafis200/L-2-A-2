@@ -31,6 +31,7 @@ const getAllCar = catchAsync(async (req, res) => {
 });
 
 const getSingleCar = catchAsync(async (req, res) => {
+
   const { carId } = req.params;
   const result = await CarServices.getSingleCarFromDB(carId);
   if (result.length !== 0) {

@@ -22,6 +22,18 @@ const orderModelSchema = new Schema<OrderModel>(
             required:true,
             min: 0
         },
+        name: {
+            type: String,
+            default:"unknown"
+        },
+        phone_number: {
+            type: String,
+            default:"019 xxx xxx"
+        },
+        address: {
+            type: String,
+            default:"Dhaka bangladesh"
+        },
         status: {
             type: String,
             enum: ["Pending", "Paid", "Shipped", "Completed", "Cancelled"],

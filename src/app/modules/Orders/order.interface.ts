@@ -3,6 +3,9 @@
 
 export type OrderModel = {
     email:string,
+    name?:string,
+    phone_number?:string,
+    address?:string,
     car:string,
     quantity:number,
     totalPrice:number,

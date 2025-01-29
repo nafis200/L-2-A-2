@@ -11,18 +11,16 @@ const createOrderIntoDB = async (Orderdata: OrderModel, client_ip?: string) => {
     order_id: result._id,
     car_id: Orderdata.car,
     currency: "BDT",
-    customer_name: Orderdata.email,
-    customer_address: "Dhaka",
-    customer_phone: "01922208141",
+    customer_name: Orderdata.name,
+    customer_email:Orderdata.email,
+    customer_address: Orderdata.address,
+    customer_phone: Orderdata.phone_number,
     customer_city: "Tongi",
     client_ip,
   };
 
   const payment = await orderUtils.makePaymentAsync(shurjopayPayload);
   
-  // console.log(payment)
-
-
   if (payment?.transactionStatus) {
     await OrderModels.findOneAndUpdate(
       { _id: result._id },
@@ -44,6 +42,7 @@ const createOrderIntoDB = async (Orderdata: OrderModel, client_ip?: string) => {
     );
   }
   
+
   
 
   return payment.checkout_url;
