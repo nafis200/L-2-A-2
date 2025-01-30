@@ -3,6 +3,7 @@ import express from 'express';
 import { UserController } from './user.controller';
 import ValidateRequest from '../../middleware/validateRequest';
 import { refreshTokenValidationSchema, UserValidationSchema } from './user.validation';
+import auth from '../../middleware/auth';
 
 
 
@@ -17,6 +18,10 @@ router.post(
     ValidateRequest(refreshTokenValidationSchema),
     UserController.refreshToken
   );
+
+router.put('/:carId',auth("admin"),UserController.BlockedUser)
+
+router.get('/alluser',UserController.AllUser)
 
 
 export const UserRoutes = router;

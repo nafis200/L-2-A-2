@@ -19,9 +19,6 @@ const getAllCarFromDB = async (query: Record<string, unknown>) => {
 
   const result = await academicSemesterQuery.modelQuery;
   const meta = await academicSemesterQuery.countTotal();
-
- 
-
   return {
     meta,
     result,

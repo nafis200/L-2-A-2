@@ -5,6 +5,7 @@ import config from '../../config';
 import AppError from '../../errors/AppError';
 import httpStatus from "http-status";
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import { ObjectId } from 'mongodb';
 
 const RegisterUser = async (payload: TUser) => {
   if (!payload) {
@@ -54,6 +55,10 @@ const loginUser = async (payload: TUser) => {
   
   if(!user){
     throw new AppError(httpStatus.NOT_FOUND,"email is not register")
+  }
+
+  if(user.status === 'blocked'){
+     throw new AppError(httpStatus.FORBIDDEN,"user is blocked")
   }
 
   if (!(await User.isPasswordMatched(payload?.password, user?.password))) {
@@ -113,8 +118,28 @@ const refreshToken = async (token: string) => {
   };
 };
 
+
+const BlockedUser = async(id:string)=>{
+
+  const result = await User.updateOne(
+    { _id: new ObjectId(id) },
+    {
+      status:'blocked',
+    },
+  );
+  return result;
+}
+
+const Alluser = async()=>{
+   const result = await User.find()
+   return result
+}
+
+
 export const UserServices = {
   RegisterUser,
   loginUser,
   refreshToken,
+  BlockedUser,
+  Alluser
 };

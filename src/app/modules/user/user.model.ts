@@ -23,6 +23,11 @@ const userSchema = new Schema<TUser, UserModel>(
       enum: ['user', 'admin'],
     },
     profileImg: { type: String },
+    status:{
+       type:String,
+       enum:['in-progress','blocked'],
+       default:'in-progress'
+    }
   },
   {
     timestamps: true,

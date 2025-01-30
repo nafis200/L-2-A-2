@@ -53,8 +53,34 @@ const RegisterUser = catchAsync(async (req, res) => {
     });
   });
 
+  const BlockedUser = catchAsync(async(req,res)=>{
+
+     const {carId} = req.params
+     const result = await UserServices.BlockedUser(carId)
+     sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'User is blocked',
+      data: result,
+    });
+  })
+
+  const AllUser = catchAsync(async(req,res)=>{
+    const result = await UserServices.Alluser()
+    sendResponse(res, {
+     statusCode: httpStatus.OK,
+     success: true,
+     message: 'User is retrived',
+     data: result,
+   });
+  })
+
+  
+
   export const UserController = {
     RegisterUser,
     loginUser,
     refreshToken,
+    BlockedUser,
+    AllUser
   };

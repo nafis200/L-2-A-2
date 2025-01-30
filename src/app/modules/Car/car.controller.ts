@@ -5,7 +5,7 @@ import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 const createCar = catchAsync(async (req, res) => {
   const Cardata = req.body;
-
+  
   const ZodparseCardata = CarModelValidationSchema.parse(Cardata);
 
   const result = await CarServices.createCarIntoDB(ZodparseCardata);
@@ -19,7 +19,6 @@ const createCar = catchAsync(async (req, res) => {
 
 const getAllCar = catchAsync(async (req, res) => {
  
-
   const result = await CarServices.getAllCarFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -56,6 +55,7 @@ const UpdateSingleCar = catchAsync(async (req, res) => {
   const Cardata = req.body;
   const ZodparseCardata = CarModelUpdateValidationSchema.parse(Cardata);
   const result = await CarServices.getUpdateCarFromDB(carId, ZodparseCardata);
+
 
   if (result !== null) {
     sendResponse(res, {
