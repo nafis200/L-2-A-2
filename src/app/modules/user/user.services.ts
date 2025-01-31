@@ -6,6 +6,7 @@ import AppError from '../../errors/AppError';
 import httpStatus from "http-status";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { ObjectId } from 'mongodb';
+import bcrypt from 'bcrypt';
 
 const RegisterUser = async (payload: TUser) => {
   if (!payload) {
@@ -135,11 +136,56 @@ const Alluser = async()=>{
    return result
 }
 
+const changePassword = async (
+  userData: JwtPayload,
+  payload: { oldPassword: string; newPassword: string },
+) => {
+
+  
+  const user = await User.isUserExistsByCustomId(userData.email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
+  }
+
+  const userStatus = user?.status;
+
+  if (userStatus === 'blocked') {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
+  }
+
+  //checking if the password is correct
+
+  if (!(await User.isPasswordMatched(payload.oldPassword, user?.password)))
+    throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
+
+  //hash new password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  );
+
+  await User.findOneAndUpdate(
+    {
+      email: userData.email,
+      role: userData.role,
+    },
+    {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+      passwordChangedAt: new Date(),
+    },
+  );
+
+  return null;
+};
+
 
 export const UserServices = {
   RegisterUser,
   loginUser,
   refreshToken,
   BlockedUser,
-  Alluser
+  Alluser,
+  changePassword 
 };

@@ -2,7 +2,7 @@
 import express from 'express';
 import { UserController } from './user.controller';
 import ValidateRequest from '../../middleware/validateRequest';
-import { refreshTokenValidationSchema, UserValidationSchema } from './user.validation';
+import { changePasswordValidationSchema, refreshTokenValidationSchema, UserValidationSchema } from './user.validation';
 import auth from '../../middleware/auth';
 
 
@@ -22,6 +22,13 @@ router.post(
 router.put('/:carId',auth("admin"),UserController.BlockedUser)
 
 router.get('/alluser',UserController.AllUser)
+
+router.post(
+  '/change-password',auth("admin","user"),
+  ValidateRequest(changePasswordValidationSchema),
+  UserController.changePassword,
+);
+
 
 
 export const UserRoutes = router;

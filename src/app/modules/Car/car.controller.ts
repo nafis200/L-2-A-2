@@ -28,6 +28,16 @@ const getAllCar = catchAsync(async (req, res) => {
     data: result.result,
   });
 });
+const getOwnCar = catchAsync(async (req, res) => {
+ 
+  const result = await CarServices.OwnCarFromDB(req.user!);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Owm Order are retrieved successfully',
+    data:result
+  });
+});
 
 const getSingleCar = catchAsync(async (req, res) => {
 
@@ -93,4 +103,5 @@ export const CarControllers = {
   getSingleCar,
   UpdateSingleCar,
   getDeleteCar,
+  getOwnCar 
 };

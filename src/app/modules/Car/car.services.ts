@@ -3,6 +3,8 @@ import { SearchField } from './car.constant';
 import type { CarModel } from './car.interface';
 import { CarModels } from './car.model';
 import { ObjectId } from 'mongodb';
+import { JwtPayload } from 'jsonwebtoken';
+import { OrderModels } from '../Orders/order.model';
 
 const createCarIntoDB = async (Cardata: CarModel) => {
   const result = await CarModels.create(Cardata);
@@ -24,6 +26,13 @@ const getAllCarFromDB = async (query: Record<string, unknown>) => {
     result,
   };
 };
+
+const OwnCarFromDB = async(userData: JwtPayload,)=>{
+      const result = await OrderModels.find({
+         email: userData.email
+      })
+      return result
+}
 
 const getSingleCarFromDB = async (carId: string) => {
   const result = await CarModels.aggregate([
@@ -63,4 +72,5 @@ export const CarServices = {
   getSingleCarFromDB,
   getUpdateCarFromDB,
   deleteCarFromDB,
+  OwnCarFromDB
 };
